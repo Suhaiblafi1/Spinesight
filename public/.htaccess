@@ -1,14 +1,25 @@
 # SpineSight — GoDaddy (Apache) configuration
 # Upload the contents of the dist/ folder to public_html/
 
-# SPA routing: send all non-file requests to index.html
+# SPA routing: send non-file requests to index.html — MAIN DOMAIN ONLY.
+# The HTTP_HOST condition keeps these rules away from subdomains
+# (e.g. diagnostics.spinesight.health), whose app lives in a subfolder.
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+
+  # Serve index.html itself directly
+  RewriteCond %{HTTP_HOST} ^(www\.)?spinesight\.health$ [NC]
   RewriteRule ^index\.html$ - [L]
+
+  # Existing files and directories are served as-is
+  RewriteCond %{HTTP_HOST} ^(www\.)?spinesight\.health$ [NC]
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
+
+  # Everything else on the main domain falls back to the SPA
+  RewriteCond %{HTTP_HOST} ^(www\.)?spinesight\.health$ [NC]
   RewriteRule ^ /index.html [L]
 </IfModule>
 
