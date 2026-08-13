@@ -1,0 +1,157 @@
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/inter-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/inter-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/inter-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/inter-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/inter-800.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/manrope-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/manrope-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/manrope-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/manrope-800.woff2') format('woff2');
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 210 45% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 210 45% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 45% 12%;
+    --primary: 204 55% 40%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 160 35% 95%;
+    --secondary-foreground: 204 55% 25%;
+    --muted: 210 30% 96%;
+    --muted-foreground: 210 15% 42%;
+    --accent: 152 42% 50%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 210 25% 90%;
+    --input: 210 25% 90%;
+    --ring: 204 55% 40%;
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer components {
+  .container-site {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-brand-blue to-brand-green px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-blue/25 transition-all hover:shadow-xl hover:shadow-brand-green/30 hover:-translate-y-0.5;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-white/10;
+  }
+  .btn-outline-dark {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-brand-navy/15 px-6 py-3 text-sm font-semibold text-brand-navy transition-all hover:border-brand-blue hover:text-brand-blue;
+  }
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-brand-green/30 bg-brand-green/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-brand-green;
+  }
+  .eyebrow-light {
+    @apply inline-flex items-center gap-2 rounded-full border border-brand-blue/20 bg-brand-blue/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-brand-blue;
+  }
+  .card-soft {
+    @apply rounded-2xl border border-slate-200/80 bg-white p-7 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1;
+  }
+  .grid-bg {
+    background-image: linear-gradient(to right, rgb(255 255 255 / 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.045) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+  .grid-bg-light {
+    background-image: linear-gradient(to right, rgb(13 60 100 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(13 60 100 / 0.05) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+  .text-gradient {
+    @apply bg-gradient-to-r from-brand-green via-brand-teal to-brand-blue bg-clip-text text-transparent;
+  }
+}
+
+@layer utilities {
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
