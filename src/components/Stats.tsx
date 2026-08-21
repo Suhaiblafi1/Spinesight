@@ -23,16 +23,19 @@ export function Stat({
   suffix,
   label,
   started,
+  prefix = '',
 }: {
   value: number
   suffix: string
   label: string
   started: boolean
+  prefix?: string
 }) {
   const v = useCountUp(value, 1600, started)
   return (
-    <div className="text-center">
-      <p className="font-display text-4xl font-bold text-white sm:text-5xl">
+    <div className="text-center" role="text" aria-label={`${prefix}${value.toLocaleString()}${suffix} — ${label}`}>
+      <p className="font-display text-4xl font-bold text-white sm:text-5xl" aria-hidden="true">
+        {prefix}
         {v.toLocaleString()}
         <span className="text-gradient">{suffix}</span>
       </p>

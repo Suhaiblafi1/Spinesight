@@ -16,6 +16,11 @@ $name    = trim(strip_tags($_POST['name'] ?? ''));
 $email   = trim(filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL));
 $org     = trim(strip_tags($_POST['organization'] ?? ''));
 $topic   = trim(strip_tags($_POST['topic'] ?? ''));
+$country = trim(strip_tags($_POST['country'] ?? ''));
+$orgtype = trim(strip_tags($_POST['org_type'] ?? ''));
+$volume  = trim(strip_tags($_POST['volume'] ?? ''));
+$pacs    = trim(strip_tags($_POST['pacs'] ?? ''));
+$timing  = trim(strip_tags($_POST['timeline'] ?? ''));
 $message = trim(strip_tags($_POST['message'] ?? ''));
 
 if ($name === '' || $email === '' || $message === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -28,10 +33,15 @@ $subject = '[SpineSight Website] ' . ($topic !== '' ? $topic : 'New inquiry') . 
 
 $body  = "New message from the SpineSight website\n";
 $body .= "----------------------------------------\n";
-$body .= "Name:         $name\n";
-$body .= "Email:        $email\n";
-$body .= "Organization: $org\n";
-$body .= "Topic:        $topic\n";
+$body .= "Name:             $name\n";
+$body .= "Email:            $email\n";
+$body .= "Organization:     $org\n";
+$body .= "Topic:            $topic\n";
+$body .= "Country:          $country\n";
+$body .= "Organization type:$orgtype\n";
+$body .= "Monthly volume:   $volume\n";
+$body .= "Current PACS/RIS: $pacs\n";
+$body .= "Pilot timeline:   $timing\n";
 $body .= "----------------------------------------\n\n";
 $body .= $message . "\n";
 

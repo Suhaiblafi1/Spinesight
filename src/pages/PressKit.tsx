@@ -5,10 +5,10 @@ import { CONTACT_EMAIL } from '@/data/site'
 import { useReveal } from '@/hooks/useReveal'
 
 const FACTS = [
-  { icon: Building2, label: 'Focus', value: 'AI clinical decision support for spine imaging (X-ray + MRI)' },
+  { icon: Building2, label: 'Focus', value: 'AI clinical decision support for lumbar X-ray (MRI layer in development)' },
   { icon: MapPin, label: 'Headquarters', value: 'Amman, Jordan' },
-  { icon: Microscope, label: 'Evidence', value: 'Published clinical research; multi-site external validation underway' },
-  { icon: Cpu, label: 'Product', value: 'Live diagnostics platform with PACS/DICOM connectivity' },
+  { icon: Microscope, label: 'Evidence', value: 'Published clinical research; external validation completed — manuscript under review' },
+  { icon: Cpu, label: 'Product', value: 'Live diagnostics platform; PACS/DICOM integration in institutional deployments' },
 ]
 
 const ASSETS = [
@@ -20,10 +20,10 @@ const ASSETS = [
 ]
 
 const BOILERPLATE_SHORT =
-  'SpineSight is a research-based clinical decision-support platform for spine imaging. It analyzes X-ray and MRI studies and turns them into physician-verified reports and rehabilitation plans in under a minute — supporting non-specialist physicians, accelerating decisions, and reducing reading errors.'
+  'SpineSight is a research-backed clinical decision-support platform for spine imaging. It analyzes lumbar X-ray studies and turns them into structured, physician-reviewable reports and rehabilitation plans in under a minute — supporting non-specialist physicians, accelerating decisions, and improving consistency. An MRI disc-assessment layer is in development.'
 
 const BOILERPLATE_LONG =
-  'SpineSight is a health-tech company building AI clinical decision support for spine imaging. Born from published academic research, the platform analyzes spine X-ray and MRI studies through disease-specific modules — spondylolisthesis, scoliosis, vertebral fractures, degenerative changes, and MRI disc assessment — and converts them into physician-verified clinical reports and structured rehabilitation plans in under a minute. Every module is developed through a research-first pipeline: annotated medical data, expert physician labeling, model training, independent verification, and scientific publication. Headquartered in Amman, Jordan, SpineSight serves hospitals, imaging centers, and clinics across the region, with a regulatory roadmap spanning JFDA, SFDA, ISO 13485, CE/MDR, and FDA readiness.'
+  'SpineSight is a health-tech company building AI clinical decision support for spine imaging. Born from published academic research, the platform currently analyzes lateral lumbar X-rays through its first disease module — spondylolisthesis detection, slip measurement, and Meyerding grading — and converts them into physician-reviewable clinical reports and structured rehabilitation plans in under a minute. Further modules — scoliosis and alignment, vertebral fracture detection, degenerative changes, and MRI disc assessment — are in development. Every module is developed through a research-first pipeline: annotated medical data, expert physician labeling, model training, independent verification, and scientific publication. Headquartered in Amman, Jordan, SpineSight serves hospitals, imaging centers, and clinics across the region, with a regulatory roadmap spanning JFDA, SFDA, ISO 13485, CE/MDR, and FDA readiness.'
 
 export default function PressKit() {
   useReveal()

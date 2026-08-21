@@ -10,6 +10,7 @@ import {
   Lock,
 } from 'lucide-react'
 import { PageHero, CTASection } from '@/components/Sections'
+import { SERVICE_COMPARISON } from '@/data/site'
 import { useReveal } from '@/hooks/useReveal'
 import SEO from '@/components/SEO'
 
@@ -19,18 +20,18 @@ const JOURNEY = [
     icon: UploadCloud,
     title: 'Clinical context first',
     subtitle: 'Patient data & symptoms',
-    text: 'The journey starts before the report: patient information, symptoms, red flags, and a structured clinical assessment are captured alongside the imaging study.',
+    text: 'The journey starts before the report: patient information, symptoms, red flags, and a structured clinical assessment are captured alongside the lumbar X-ray study.',
     image: '/images/platform-case-entry.webp',
-    alt: 'SpineSight case entry with clinical assessment',
+    alt: 'SpineSight case entry with structured clinical assessment form',
   },
   {
     step: '02',
     icon: BrainCircuit,
     title: 'AI image analysis',
     subtitle: 'Measurements & visual grading',
-    text: 'The engine segments the vertebrae, performs measurements, grades findings, and links the image to the clinical context — flagging anything that needs a deeper look.',
+    text: 'The engine segments the vertebrae, performs measurements, grades findings, and links the image to the clinical context — flagging anything that needs a deeper look or an MRI.',
     image: '/images/platform-analysis.webp',
-    alt: 'SpineSight AI segmentation and grading',
+    alt: 'SpineSight AI segmentation and grading of lumbar vertebrae',
   },
   {
     step: '03',
@@ -39,15 +40,15 @@ const JOURNEY = [
     subtitle: 'Practical outputs',
     text: 'The physician receives a reviewable report and, when appropriate, a phased rehabilitation plan with goals, exercises, red flags, and precautions.',
     image: '/images/platform-rehab.webp',
-    alt: 'SpineSight rehabilitation plan',
+    alt: 'SpineSight phased rehabilitation plan output',
   },
 ]
 
 const PRINCIPLES = [
   {
     icon: UserCheck,
-    title: 'Doctor verification at every step',
-    text: 'The physician reads the report, validates it, and approves the plan or referral decision. The AI supports the decision — it never replaces it.',
+    title: 'Designed for physician review',
+    text: 'Every output is designed for physician review and approval before clinical use. SpineSight generates decision support; the treating institution retains clinical responsibility.',
   },
   {
     icon: HeartPulse,
@@ -56,13 +57,13 @@ const PRINCIPLES = [
   },
   {
     icon: Plug,
-    title: 'PACS / DICOM connectivity',
-    text: 'The platform connects directly to existing imaging infrastructure — no new hardware, no heavy capital expenditure.',
+    title: 'PACS / DICOM integration',
+    text: 'Available as part of institutional deployment and configured to the hospital\u2019s technical environment — no new hardware, no heavy capital expenditure.',
   },
   {
     icon: Lock,
     title: 'Secure by design',
-    text: 'Secure sign-in, role-based access, and de-identified imaging data protect patients and institutions.',
+    text: 'Designed with encrypted data transfer, role-based access, and configurable de-identification. Deployment controls are documented for each institutional implementation.',
   },
 ]
 
@@ -70,7 +71,7 @@ export default function HowItWorks() {
   useReveal()
   return (
     <>
-      <SEO title="How It Works" description="See how SpineSight turns spine imaging into a verified report and rehabilitation plan: case input, AI analysis, and doctor review in one clinical pathway." path="/how-it-works" />
+      <SEO title="How It Works" description="See how SpineSight turns a lumbar X-ray into a physician-reviewable report and rehabilitation plan: case input, AI analysis, and doctor review in one clinical pathway." path="/how-it-works" />
       <PageHero
         eyebrow="How It Works"
         title="One clinical pathway, from image to decision"
@@ -136,10 +137,10 @@ export default function HowItWorks() {
               <p className="text-xs font-semibold uppercase tracking-widest text-brand-green">
                 Rapid Service
               </p>
-              <h3 className="mt-2 text-2xl font-bold text-white">Preliminary result + rehab plan</h3>
+              <h3 className="mt-2 text-2xl font-bold text-white">Preliminary result + rehab support</h3>
               <p className="mt-3 leading-relaxed text-slate-300">
-                When the physician needs fast confirmation, SpineSight delivers a preliminary reading
-                and a suitable rehabilitation plan after entering the patient's core data.
+                Core patient data plus a lumbar X-ray produce a preliminary structured result and a
+                rehab-support output — built for physicians who need fast confirmation.
               </p>
             </div>
             <div className="reveal rounded-2xl border border-brand-green/30 bg-gradient-to-br from-white/10 to-brand-green/10 p-9 backdrop-blur">
@@ -148,10 +149,32 @@ export default function HowItWorks() {
               </p>
               <h3 className="mt-2 text-2xl font-bold text-white">Detailed report + clinical recommendation</h3>
               <p className="mt-3 leading-relaxed text-slate-300">
-                The physician adds symptoms and broader clinical context to strengthen the report —
-                with a rehabilitation plan included whenever it is needed.
+                A full clinical assessment plus imaging produce a detailed report with clinical
+                correlation, referral or rehab support, and a structured review workflow.
               </p>
             </div>
+          </div>
+
+          {/* COMPARISON TABLE */}
+          <div className="reveal mt-10 overflow-x-auto rounded-2xl border border-white/10">
+            <table className="w-full min-w-[640px] text-sm">
+              <thead>
+                <tr className="bg-white/10 text-left text-xs uppercase tracking-widest text-slate-300">
+                  <th className="px-6 py-4 font-semibold"> </th>
+                  <th className="px-6 py-4 font-semibold text-brand-green">Rapid</th>
+                  <th className="px-6 py-4 font-semibold text-brand-green">Integrated</th>
+                </tr>
+              </thead>
+              <tbody>
+                {SERVICE_COMPARISON.map((r, i) => (
+                  <tr key={r.label} className={i % 2 === 0 ? 'bg-white/5' : 'bg-transparent'}>
+                    <td className="px-6 py-4 font-semibold text-white">{r.label}</td>
+                    <td className="px-6 py-4 text-slate-300">{r.rapid}</td>
+                    <td className="px-6 py-4 text-slate-300">{r.integrated}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </section>

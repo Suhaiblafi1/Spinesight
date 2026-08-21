@@ -20,10 +20,11 @@ export const DISEASE_MODULES = [
   {
     id: '01',
     name: 'Spondylolisthesis',
-    modality: 'Lateral X-ray',
+    modality: 'Lateral Lumbar X-ray',
     description:
-      'Automated detection, slip measurement, and Meyerding grading of vertebral slippage — validated through published clinical research.',
-    status: 'Published evidence',
+      'Automated vertebral localization and segmentation, slip measurement, Meyerding grading, and structured L1–S1 reporting on lateral lumbar X-rays.',
+    status: 'Available now',
+    available: true,
   },
   {
     id: '02',
@@ -32,6 +33,7 @@ export const DISEASE_MODULES = [
     description:
       'Frontal-plane assessment of spinal curvature and alignment, including Cobb angle measurement and curve classification.',
     status: 'In development',
+    available: false,
   },
   {
     id: '03',
@@ -40,6 +42,7 @@ export const DISEASE_MODULES = [
     description:
       'Flags radiographic signs of vertebral fractures to support fast triage and timely referral decisions.',
     status: 'In development',
+    available: false,
   },
   {
     id: '04',
@@ -48,14 +51,16 @@ export const DISEASE_MODULES = [
     description:
       'Assesses degenerative changes in vertebrae, disc spaces, and alignment to support long-term care planning.',
     status: 'In development',
+    available: false,
   },
   {
     id: '05',
     name: 'MRI Disc Assessment',
     modality: 'MRI Support Layer',
     description:
-      'A supporting layer that is activated when X-ray findings or symptoms raise suspicion of disc pathology.',
+      'A complementary layer under development for disc and neural assessment, activated when X-ray findings or symptoms raise suspicion of disc pathology.',
     status: 'In development',
+    available: false,
   },
 ]
 
@@ -64,7 +69,7 @@ export const WORKFLOW_STEPS = [
     step: '1',
     title: 'Case Input',
     description:
-      'The physician uploads an X-ray or MRI study together with basic patient data and the clinical presentation.',
+      'The physician uploads a lumbar X-ray study together with basic patient data and the clinical presentation.',
   },
   {
     step: '2',
@@ -76,7 +81,7 @@ export const WORKFLOW_STEPS = [
     step: '3',
     title: 'Doctor Review',
     description:
-      'The physician reviews the draft report, validates it, and approves the rehabilitation plan or the referral decision.',
+      'The treating physician reviews the draft report, validates it, and approves the rehabilitation plan or the referral decision — clinical responsibility remains with the treating institution.',
   },
 ]
 
@@ -84,7 +89,7 @@ export const VALIDATION_PIPELINE = [
   {
     step: '01',
     title: 'Image Acquisition',
-    description: 'X-ray and MRI studies are collected for each in-scope spinal condition.',
+    description: 'Imaging studies are collected for each in-scope spinal condition.',
   },
   {
     step: '02',
@@ -118,7 +123,7 @@ export const PUBLICATIONS = [
     status: 'Published',
     title: 'Prevalence of Lumbar Spondylolisthesis in Jordanian Low-Back-Pain Patients',
     description:
-      'Validates the clinical need, supports the first disease module, and guides labeling protocol and dataset design.',
+      'Establishes the clinical need and guides the labeling protocol and dataset design behind the first disease module.',
     productPath: 'Clinical evidence base + labeling protocol',
   },
   {
@@ -139,17 +144,71 @@ export const PUBLICATIONS = [
   },
 ]
 
+export const EXTERNAL_STUDIES = [
+  {
+    authors: 'Lim et al.',
+    journal: 'Radiology',
+    year: '2022',
+    title: 'Improved Productivity Using Deep Learning–assisted Reporting for Lumbar Spine MRI',
+    findings:
+      'Deep-learning assistance reduced interpretation time from 124–274 seconds to 47–71 seconds per examination (P < 0.001), with interobserver agreement equal to or better than unassisted reads for spinal canal, lateral recess, and neural foraminal stenosis assessment.',
+    relevance:
+      'Direct evidence that physician-supervised AI can reduce reading time while maintaining or improving agreement between physicians in spine imaging.',
+    doi: '10.1148/radiol.220076',
+    pmid: '35699577',
+  },
+  {
+    authors: 'Hoppe et al.',
+    journal: 'La Radiologia Medica',
+    year: '2025',
+    title:
+      'Automated Spinopelvic Measurements on Radiographs with Artificial Intelligence: A Multi-reader Study',
+    findings:
+      'No significant difference between AI measurement errors and those of experienced readers on spine radiographs, while manual measurement averaged 139 seconds per case (86–231 s). The study concludes AI can save time and increase reproducibility.',
+    relevance:
+      'Closest to SpineSight\u2019s model: automated measurement from radiographs that reduces repetitive manual work.',
+    doi: '10.1007/s11547-025-01957-5',
+    pmid: '39864034',
+  },
+  {
+    authors: 'Lee et al.',
+    journal: 'The Spine Journal',
+    year: '2025',
+    title:
+      'Using Deep Learning to Enhance Reporting Efficiency and Accuracy in Degenerative Cervical Spine MRI',
+    findings:
+      'Across 50 MRI examinations and 10 radiologists of varying experience, model assistance improved interpretation time and inter-reader agreement; in one neural foraminal stenosis assessment, agreement among musculoskeletal radiologists rose from κ=0.60 to κ=0.72 (P < 0.001).',
+    relevance:
+      'Shows AI can improve consistency and efficiency across experience levels — not only for junior readers.',
+    doi: '10.1016/j.spinee.2025.03.009',
+    pmid: '40154625',
+  },
+  {
+    authors: 'Compte et al.',
+    journal: 'European Spine Journal',
+    year: '2023',
+    title:
+      'Are Current Machine Learning Applications Comparable to Radiologist Classification of Degenerate and Herniated Discs and Modic Change? A Systematic Review and Meta-analysis',
+    findings:
+      'Across 27 studies on disc degeneration, herniation, bulge, and Modic changes, algorithm performance was comparable to radiologists in the included studies — while performance often dropped in replication or external validation compared with development studies.',
+    relevance:
+      'Broad support for AI potential — and a clear justification for SpineSight\u2019s emphasis on external validation rather than internal development results alone.',
+    doi: '10.1007/s00586-023-07718-0',
+    pmid: '37150769',
+  },
+]
+
 export const RESEARCH_ROADMAP = [
   { area: 'AP / Frontal X-ray', focus: 'Scoliosis and alignment measurement' },
   { area: 'Lateral X-ray', focus: 'Degeneration, fractures, and grading' },
   { area: 'MRI', focus: 'Disc confirmation and symptom correlation' },
-  { area: 'Multi-Site Study', focus: 'External accuracy verification across doctors and sites' },
+  { area: 'Multi-Site Expansion', focus: 'Prospective validation across additional centers and populations' },
 ]
 
 export const TEAM = [
   {
-    name: 'Tasnim Al-Housani',
-    role: 'Founder & Clinical Vision Lead',
+    name: 'Tasneem N. Alhosanie',
+    role: 'Co-Founder & CEO · Clinical AI Lead',
     bio: 'Researcher at Jordan University Hospital specializing in health informatics, with 5+ years of experience and two medical-AI innovations under patent registration.',
   },
   {
@@ -183,16 +242,18 @@ export const CLINICAL_ADVISORS = [
   },
 ]
 
+export const COMPLIANCE_UPDATED = 'August 2026'
+
 export const REGULATORY_ROADMAP = [
   {
     name: 'ISO 13485',
     detail: 'Quality management system for medical devices',
-    status: 'In progress',
+    status: 'Under review',
   },
   {
     name: 'JFDA',
     detail: 'Jordan Food and Drug Administration registration',
-    status: 'In progress',
+    status: 'Under review',
   },
   {
     name: 'SFDA',
@@ -392,5 +453,72 @@ export const BLOG_POSTS: BlogPost[] = [
         ],
       },
     ],
+  },
+]
+
+export const SERVICE_COMPARISON = [
+  {
+    label: 'Designed for',
+    rapid: 'Physicians needing fast case confirmation',
+    integrated: 'Specialists and multidisciplinary teams',
+  },
+  {
+    label: 'Required inputs',
+    rapid: 'Core patient data + lumbar X-ray',
+    integrated: 'Full clinical assessment + imaging',
+  },
+  {
+    label: 'Output',
+    rapid: 'Preliminary structured result with rehab-support output',
+    integrated: 'Detailed report, clinical correlation, referral/rehab support, review workflow',
+  },
+  {
+    label: 'Typical setting',
+    rapid: 'Clinics, emergency, and rehabilitation centers',
+    integrated: 'Hospitals and imaging centers',
+  },
+  {
+    label: 'Integration',
+    rapid: 'Web platform — no new hardware',
+    integrated: 'PACS/DICOM within institutional deployment',
+  },
+]
+
+export const PILOT_POINTS = [
+  'Defined case volume agreed with your team',
+  'Clinical-user onboarding and training',
+  'Accuracy and report-turnaround assessment',
+  'Physician-acceptance survey',
+  'Final deployment report with recommendations',
+]
+
+export const BUYER_FAQ = [
+  {
+    q: 'Which modalities and views are supported?',
+    a: 'Lateral lumbar X-ray assessment is available today. Frontal (AP) X-ray modules and the MRI disc-assessment layer are in development on our public roadmap.',
+  },
+  {
+    q: 'How is SpineSight deployed?',
+    a: 'As a secure web platform — no new hardware. PACS/DICOM integration is available as part of institutional deployment and is configured to your hospital\u2019s technical environment.',
+  },
+  {
+    q: 'Where is our data hosted, and how is it protected?',
+    a: 'SpineSight is designed with encrypted data transfer, role-based access, and configurable de-identification. Hosting region, retention, and access controls are documented for each institutional implementation — request our compliance brief for details.',
+  },
+  {
+    q: 'Who is responsible for the clinical decision?',
+    a: 'The treating institution, always. SpineSight generates decision support; every output is designed for review and approval by the treating physician before clinical use.',
+  },
+  {
+    q: 'How long does onboarding take?',
+    a: 'A structured pilot typically starts within days, not months. Onboarding covers account setup, clinical-user training, and — for integrated deployments — PACS/DICOM configuration.',
+  },
+  {
+    q: 'How is pricing determined?',
+    a: 'By case volume, service depth (Rapid vs Integrated), and integration scope. Most institutions start with a pilot, then receive a quote based on measured impact.',
+  },
+  {
+    q: 'What is your regulatory status?',
+    a: 'ISO 13485 and JFDA processes are currently under review, with SFDA, CE/MDR, and FDA readiness sequenced next. Current statuses are published on our Accreditations page.',
   },
 ]

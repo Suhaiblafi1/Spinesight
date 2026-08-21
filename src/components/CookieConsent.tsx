@@ -24,29 +24,29 @@ export default function CookieConsent() {
   if (!visible) return null
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[60] px-4 pb-4">
-      <div className="mx-auto flex max-w-3xl flex-col items-start gap-4 rounded-2xl border border-white/10 bg-brand-navy/95 p-5 shadow-2xl backdrop-blur sm:flex-row sm:items-center">
-        <div className="flex items-start gap-3">
-          <Cookie className="mt-0.5 h-5 w-5 shrink-0 text-brand-green" />
-          <p className="text-sm leading-relaxed text-slate-300">
+    <div className="fixed inset-x-0 bottom-0 z-[60] px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-4">
+      <div className="mx-auto flex max-w-2xl flex-col gap-3 rounded-xl border border-white/10 bg-brand-navy/95 p-4 shadow-2xl backdrop-blur sm:flex-row sm:items-center sm:gap-4">
+        <div className="flex items-start gap-2.5">
+          <Cookie className="mt-0.5 h-4 w-4 shrink-0 text-brand-green" />
+          <p className="text-[13px] leading-relaxed text-slate-300">
             We use essential storage and — only with your consent — privacy-friendly, cookieless
-            analytics to understand how the site is used. No advertising trackers, ever. See our{' '}
+            analytics. No advertising trackers, ever. See our{' '}
             <a href="/privacy" className="font-medium text-brand-green hover:underline">
               Privacy Policy
             </a>
             .
           </p>
         </div>
-        <div className="flex shrink-0 gap-2.5">
+        <div className="flex shrink-0 gap-2 self-end sm:self-center">
           <button
             onClick={() => choose('declined')}
-            className="rounded-full border border-white/25 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+            className="rounded-full border border-white/25 px-4 py-1.5 text-[13px] font-semibold text-white transition-colors hover:bg-white/10"
           >
             Decline
           </button>
           <button
             onClick={() => choose('accepted')}
-            className="rounded-full bg-gradient-to-r from-brand-blue to-brand-green px-5 py-2 text-sm font-semibold text-white transition-all hover:-translate-y-0.5"
+            className="rounded-full bg-gradient-to-r from-brand-blue to-brand-green px-4 py-1.5 text-[13px] font-semibold text-white transition-colors hover:brightness-110"
           >
             Accept
           </button>

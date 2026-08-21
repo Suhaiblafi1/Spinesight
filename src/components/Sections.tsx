@@ -31,15 +31,15 @@ export function CTASection() {
       <div className="absolute left-1/2 top-0 h-[400px] w-[700px] -translate-x-1/2 rounded-full bg-brand-green/15 blur-[120px]" />
       <div className="container-site relative text-center">
         <h2 className="mx-auto max-w-2xl text-3xl font-bold text-white sm:text-4xl">
-          Bring research-backed spine AI to your practice
+          Bring research-backed spine AI to your institution
         </h2>
         <p className="mx-auto mt-4 max-w-xl text-slate-300">
-          Join the hospitals, imaging centers, and clinics adopting faster, more consistent spine
-          imaging decisions.
+          Explore a structured pilot designed around your clinical workflow, case volume, and
+          integration requirements.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           <Link to="/contact" className="btn-primary">
-            Request a Demo <ArrowRight className="h-4 w-4" />
+            Discuss a Pilot <ArrowRight className="h-4 w-4" />
           </Link>
           <Link to="/pricing" className="btn-outline">
             View Plans

@@ -33,10 +33,23 @@ export default function BeforeAfterSlider({
   }
   const stop = () => (dragging.current = false)
 
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowLeft') setPos((p) => Math.max(4, p - 5))
+    if (e.key === 'ArrowRight') setPos((p) => Math.min(96, p + 5))
+  }
+
   return (
     <div
       ref={ref}
+      role="slider"
+      tabIndex={0}
+      aria-label="Compare original X-ray with AI segmentation"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={Math.round(pos)}
+      onKeyDown={onKeyDown}
       className="relative aspect-[3/4] w-full cursor-ew-resize select-none overflow-hidden rounded-2xl border border-white/15 bg-[#060A0E] shadow-2xl"
+      style={{ touchAction: 'pan-y' }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={stop}

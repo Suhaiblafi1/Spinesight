@@ -1,7 +1,8 @@
 import { Link } from 'react-router'
-import { Check, ArrowRight, MessageSquareQuote } from 'lucide-react'
+import { Check, ArrowRight, MessageSquareQuote, HelpCircle } from 'lucide-react'
 import { PageHero, CTASection } from '@/components/Sections'
-import { PRICING_TIERS } from '@/data/site'
+import { PRICING_TIERS, PILOT_POINTS, BUYER_FAQ, SITE_URL } from '@/data/site'
+import JsonLd from '@/components/JsonLd'
 import { useReveal } from '@/hooks/useReveal'
 import SEO from '@/components/SEO'
 
@@ -10,6 +11,19 @@ export default function Pricing() {
   return (
     <>
       <SEO title="Pricing" description="SpineSight plans for clinics, imaging centers, and hospitals. Pricing is tailored to your institution: request a custom quote or start with a structured pilot." path="/pricing" />
+      <JsonLd
+        id="faq"
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: BUYER_FAQ.map((f) => ({
+            '@type': 'Question',
+            name: f.q,
+            acceptedAnswer: { '@type': 'Answer', text: f.a },
+          })),
+          url: `${SITE_URL}/pricing`,
+        }}
+      />
       <PageHero
         eyebrow="Pricing"
         title="Plans shaped around your institution"
@@ -54,24 +68,66 @@ export default function Pricing() {
             ))}
           </div>
 
-          <div className="reveal mx-auto mt-16 flex max-w-3xl items-start gap-5 rounded-3xl border border-brand-green/25 bg-brand-mist/50 p-8">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-blue to-brand-green text-white">
-              <MessageSquareQuote className="h-6 w-6" />
+          {/* PILOT */}
+          <div className="reveal mx-auto mt-16 max-w-4xl rounded-3xl border border-brand-green/25 bg-brand-mist/50 p-8 sm:p-10">
+            <div className="flex items-start gap-5">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-blue to-brand-green text-white">
+                <MessageSquareQuote className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-brand-navy">
+                  Start with a structured institutional pilot
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                  A defined engagement with clear inputs and measurable outputs — so the decision to
+                  scale is based on evidence from your own institution, not a brochure.
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-lg font-bold text-brand-navy">Start with a pilot</h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                Not sure which plan fits? We begin with a structured pilot at your institution —
-                measuring accuracy, report turnaround, and physician acceptance — then finalize
-                pricing based on real, measured impact.
-              </p>
-              <Link
-                to="/contact"
-                className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-blue hover:gap-3"
-              >
-                Talk to us about a pilot <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
+            <ul className="mt-7 grid gap-3 sm:grid-cols-2">
+              {PILOT_POINTS.map((p) => (
+                <li key={p} className="flex items-start gap-2.5 rounded-xl bg-white/80 p-4 text-sm font-medium text-slate-700">
+                  <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-green" />
+                  {p}
+                </li>
+              ))}
+            </ul>
+            <Link
+              to="/contact"
+              className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-brand-blue hover:gap-3"
+            >
+              Discuss a pilot for your institution <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* BUYER FAQ */}
+      <section className="bg-brand-sky/60 py-24">
+        <div className="container-site">
+          <div className="reveal mx-auto max-w-2xl text-center">
+            <span className="eyebrow-light">
+              <HelpCircle className="h-3.5 w-3.5" /> For Hospital Buyers
+            </span>
+            <h2 className="mt-5 text-3xl font-bold text-brand-navy sm:text-4xl">
+              Frequently asked questions
+            </h2>
+            <p className="mt-4 text-lg text-slate-600">
+              Straight answers to the questions procurement, IT, and clinical leads usually ask.
+            </p>
+          </div>
+          <div className="mx-auto mt-12 grid max-w-5xl gap-5 md:grid-cols-2">
+            {BUYER_FAQ.map((f) => (
+              <div key={f.q} className="card-soft reveal">
+                <h3 className="font-bold text-brand-navy">{f.q}</h3>
+                <p className="mt-2.5 text-sm leading-relaxed text-slate-600">{f.a}</p>
+              </div>
+            ))}
+          </div>
+          <div className="reveal mt-12 text-center">
+            <Link to="/contact" className="btn-primary">
+              Request Compliance Brief <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </section>

@@ -68,6 +68,7 @@ function Navbar() {
           className="rounded-lg p-2 text-brand-navy lg:hidden"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
+          aria-expanded={open}
         >
           {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
@@ -106,8 +107,8 @@ function Footer() {
         <div className="md:col-span-2">
           <Logo dark />
           <p className="mt-5 max-w-md text-sm leading-relaxed text-slate-400">
-            Research-based clinical decision support for spine imaging. From an X-ray or MRI to a clear
-            clinical report and rehabilitation plan — with the physician always in control.
+            Research-backed clinical decision support for spine imaging. From a lumbar X-ray to a
+            structured clinical report and rehabilitation plan — with the physician always in control.
           </p>
           <div className="mt-6 space-y-2 text-sm text-slate-400">
             <p className="flex items-center gap-2">
@@ -182,7 +183,7 @@ export default function Layout() {
           url: SITE_URL,
           logo: `${SITE_URL}/images/logo-icon.png`,
           description:
-            'Research-based clinical decision support for spine imaging: from X-ray and MRI to a verified clinical report and rehabilitation plan.',
+            'Research-backed clinical decision support for spine imaging: from a lumbar X-ray to a structured, physician-reviewable report and rehabilitation plan.',
           email: CONTACT_EMAIL,
           address: {
             '@type': 'PostalAddress',

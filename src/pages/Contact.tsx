@@ -6,6 +6,12 @@ import { useReveal } from '@/hooks/useReveal'
 import SEO from '@/components/SEO'
 
 const TOPICS = ['Request a demo', 'Pricing quote', 'Pilot program', 'Research collaboration', 'Other']
+const ORG_TYPES = ['Hospital', 'Imaging center', 'Clinic', 'Rehabilitation center', 'University / research', 'Other']
+const VOLUMES = ['Under 100', '100–500', '500–1,000', 'Over 1,000']
+const TIMELINES = ['As soon as possible', 'Within 1–3 months', 'Within 3–6 months', 'Just exploring']
+
+const inputCls =
+  'mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition-colors focus:border-brand-blue'
 
 export default function Contact() {
   useReveal()
@@ -76,6 +82,7 @@ export default function Contact() {
               href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Chat with the SpineSight team on WhatsApp"
               className="mt-8 flex items-center gap-4 rounded-2xl border border-brand-green/30 bg-gradient-to-r from-brand-mist to-white p-5 transition-all hover:-translate-y-0.5 hover:shadow-lg"
             >
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-green to-brand-teal text-white">
@@ -93,9 +100,29 @@ export default function Contact() {
               <div className="flex h-full flex-col items-center justify-center rounded-3xl border border-brand-green/30 bg-brand-mist/50 p-12 text-center">
                 <CheckCircle2 className="h-14 w-14 text-brand-green" />
                 <h3 className="mt-5 text-2xl font-bold text-brand-navy">Message received</h3>
-                <p className="mt-2 max-w-sm text-slate-600">
+                <p className="mt-2 max-w-md text-slate-600">
                   Thank you for reaching out. A member of the SpineSight team will get back to you
                   within one business day.
+                </p>
+                <p className="mt-4 max-w-md text-sm text-slate-500">
+                  Need a faster answer? Email us at{' '}
+                  <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold text-brand-blue hover:underline">
+                    {CONTACT_EMAIL}
+                  </a>{' '}
+                  or{' '}
+                  <a
+                    href={WHATSAPP_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-brand-blue hover:underline"
+                  >
+                    message us on WhatsApp
+                  </a>
+                  . Your details are handled under our{' '}
+                  <a href="/privacy" className="font-semibold text-brand-blue hover:underline">
+                    Privacy Policy
+                  </a>
+                  .
                 </p>
               </div>
             ) : (
@@ -105,48 +132,97 @@ export default function Contact() {
               >
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div>
-                    <label className="text-sm font-semibold text-brand-navy">Full name</label>
+                    <label htmlFor="cf-name" className="text-sm font-semibold text-brand-navy">Full name</label>
                     <input
+                      id="cf-name"
                       required
                       name="name"
-                      className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition-colors focus:border-brand-blue"
+                      className={inputCls}
                       placeholder="Dr. Jane Smith"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-semibold text-brand-navy">Work email</label>
+                    <label htmlFor="cf-email" className="text-sm font-semibold text-brand-navy">Work email</label>
                     <input
+                      id="cf-email"
                       required
                       name="email"
                       type="email"
-                      className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition-colors focus:border-brand-blue"
+                      className={inputCls}
                       placeholder="you@hospital.com"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-semibold text-brand-navy">Organization</label>
+                    <label htmlFor="cf-org" className="text-sm font-semibold text-brand-navy">Organization</label>
                     <input
+                      id="cf-org"
                       name="organization"
-                      className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition-colors focus:border-brand-blue"
+                      className={inputCls}
                       placeholder="Hospital / center name"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-semibold text-brand-navy">Topic</label>
-                    <select name="topic" className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition-colors focus:border-brand-blue">
+                    <label htmlFor="cf-topic" className="text-sm font-semibold text-brand-navy">Topic</label>
+                    <select id="cf-topic" name="topic" className={`${inputCls} bg-white`}>
                       {TOPICS.map((t) => (
+                        <option key={t}>{t}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="cf-country" className="text-sm font-semibold text-brand-navy">
+                      Country <span className="font-normal text-slate-400">(optional)</span>
+                    </label>
+                    <input id="cf-country" name="country" className={inputCls} placeholder="Jordan" />
+                  </div>
+                  <div>
+                    <label htmlFor="cf-orgtype" className="text-sm font-semibold text-brand-navy">
+                      Organization type <span className="font-normal text-slate-400">(optional)</span>
+                    </label>
+                    <select id="cf-orgtype" name="org_type" className={`${inputCls} bg-white`} defaultValue="">
+                      <option value="" disabled>Select…</option>
+                      {ORG_TYPES.map((t) => (
+                        <option key={t}>{t}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="cf-volume" className="text-sm font-semibold text-brand-navy">
+                      Monthly lumbar X-ray volume <span className="font-normal text-slate-400">(optional)</span>
+                    </label>
+                    <select id="cf-volume" name="volume" className={`${inputCls} bg-white`} defaultValue="">
+                      <option value="" disabled>Select…</option>
+                      {VOLUMES.map((t) => (
+                        <option key={t}>{t}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="cf-pacs" className="text-sm font-semibold text-brand-navy">
+                      Current PACS / RIS <span className="font-normal text-slate-400">(optional)</span>
+                    </label>
+                    <input id="cf-pacs" name="pacs" className={inputCls} placeholder="e.g. Agfa, GE, none" />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label htmlFor="cf-timeline" className="text-sm font-semibold text-brand-navy">
+                      Preferred pilot timeline <span className="font-normal text-slate-400">(optional)</span>
+                    </label>
+                    <select id="cf-timeline" name="timeline" className={`${inputCls} bg-white`} defaultValue="">
+                      <option value="" disabled>Select…</option>
+                      {TIMELINES.map((t) => (
                         <option key={t}>{t}</option>
                       ))}
                     </select>
                   </div>
                 </div>
                 <div className="mt-5">
-                  <label className="text-sm font-semibold text-brand-navy">Message</label>
+                  <label htmlFor="cf-message" className="text-sm font-semibold text-brand-navy">Message</label>
                   <textarea
+                    id="cf-message"
                     required
                     name="message"
                     rows={5}
-                    className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none transition-colors focus:border-brand-blue"
+                    className={inputCls}
                     placeholder="Tell us about your case volume, modalities, and what you would like to achieve..."
                   />
                 </div>
