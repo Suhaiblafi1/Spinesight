@@ -1,0 +1,9 @@
+---
+# cPanel Git deployment — copies the built site (dist/) into public_html
+# on every "Deploy" from cPanel > Git Version Control.
+# Safe for the diagnostics subdomain: it only copies files, never deletes.
+deployment:
+  tasks:
+    - export DEPLOYPATH=$HOME/public_html/
+    - /bin/cp -R dist/* $DEPLOYPATH
+    - /bin/cp dist/.htaccess $DEPLOYPATH
