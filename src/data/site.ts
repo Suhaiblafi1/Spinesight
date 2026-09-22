@@ -212,11 +212,6 @@ export const TEAM = [
     bio: 'Researcher at Jordan University Hospital specializing in health informatics, with 5+ years of experience and two medical-AI innovations under patent registration.',
   },
   {
-    name: 'Dr. Heba Abdel Nabi',
-    role: 'Co-Founder · AI Lead',
-    bio: 'Assistant Professor of Computer Engineering at Princess Sumaya University for Technology, specializing in AI, medical image analysis, and deep learning.',
-  },
-  {
     name: 'Dr. Suhaib Al-Khawaldeh',
     role: 'Co-Founder · Growth & Business Development',
     bio: 'PhD in Digital Economy from Aston University, UK. Leads market entry, hospital relationships, and regional expansion across Saudi Arabia and the Gulf.',
