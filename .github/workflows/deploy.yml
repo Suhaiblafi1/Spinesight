@@ -42,7 +42,10 @@ jobs:
 
       - name: Upload to the web root over FTPS
         env:
-          FTP_SERVER: ftp.spinesight.health
+          # cPanel advertises ftp.<domain>, but that subdomain has no DNS
+          # record; the apex points at the same server. Tried in order, so
+          # the conventional name wins automatically if it is ever created.
+          FTP_HOSTS: "ftp.spinesight.health spinesight.health"
           FTP_USER: Suhaib@spinesight.health
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         run: |
@@ -50,6 +53,23 @@ jobs:
 
           if [ -z "${FTP_PASSWORD:-}" ]; then
             echo "::error::The FTP_PASSWORD repository secret is not set, so there is nothing to authenticate with."
+            exit 1
+          fi
+
+          # Pick the first candidate that actually resolves. A host that does
+          # not resolve costs four connect retries before failing, so check
+          # DNS up front rather than discovering it mid-upload.
+          FTP_SERVER=""
+          for candidate in $FTP_HOSTS; do
+            if getent hosts "$candidate" >/dev/null 2>&1; then
+              FTP_SERVER="$candidate"
+              echo "FTP host: $candidate"
+              break
+            fi
+            echo "FTP host: $candidate does not resolve, trying the next"
+          done
+          if [ -z "$FTP_SERVER" ]; then
+            echo "::error::None of these hostnames resolve: $FTP_HOSTS. Check the domain's DNS records."
             exit 1
           fi
 
