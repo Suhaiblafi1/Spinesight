@@ -1,0 +1,109 @@
+# Builds the site and uploads it to GoDaddy over explicit FTPS.
+#
+# Requires one repository secret: FTP_PASSWORD
+#   Settings -> Secrets and variables -> Actions -> New repository secret
+#
+# The upload is strictly additive: it overwrites the files it sends and never
+# deletes anything already on the server. That is deliberate — the diagnostics
+# subdomain lives in its own folder under the web root, and a mirroring deploy
+# would wipe it. Superseded hashed assets accumulate instead; they are
+# unreferenced and can be pruned by hand occasionally.
+name: Deploy to GoDaddy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Never let two deploys write to the web root at the same time.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload to the web root over FTPS
+        env:
+          FTP_SERVER: ftp.spinesight.health
+          FTP_USER: emhppl0pc0sn
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${FTP_PASSWORD:-}" ]; then
+            echo "::error::The FTP_PASSWORD repository secret is not set, so there is nothing to authenticate with."
+            exit 1
+          fi
+
+          # Some GoDaddy FTP accounts land in the hosting root (which contains
+          # public_html), others are confined to the web root itself. Look
+          # rather than assume — uploading into the wrong one would publish the
+          # site at the wrong path.
+          root_listing=$(curl --fail --silent --show-error --ssl-reqd \
+            --connect-timeout 30 --retry 3 --retry-delay 5 \
+            --user "$FTP_USER:$FTP_PASSWORD" --list-only "ftp://$FTP_SERVER/")
+
+          if grep -qx 'public_html' <<<"$root_listing"; then
+            remote_dir='public_html'
+          else
+            remote_dir='.'
+          fi
+          echo "Uploading into: $remote_dir"
+
+          mapfile -t files < <(find dist -type f | sort)
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "::error::dist/ is empty — the build produced nothing to deploy."
+            exit 1
+          fi
+
+          for file in "${files[@]}"; do
+            rel="${file#dist/}"
+            curl --fail --silent --show-error --ssl-reqd --ftp-create-dirs \
+              --connect-timeout 30 --retry 3 --retry-delay 5 \
+              --user "$FTP_USER:$FTP_PASSWORD" \
+              --upload-file "$file" \
+              "ftp://$FTP_SERVER/$remote_dir/$rel"
+            echo "  uploaded $rel"
+          done
+
+          echo "Uploaded ${#files[@]} files."
+
+      - name: Confirm the live site serves the new build
+        run: |
+          set -euo pipefail
+
+          # index.html points at a content-hashed bundle, so seeing that exact
+          # filename on the live site proves this build is the one being served.
+          bundle=$(grep -o 'assets/index-[A-Za-z0-9_-]*\.js' dist/index.html | head -1)
+          echo "Looking for $bundle on https://spinesight.health/"
+
+          for attempt in 1 2 3 4 5; do
+            if curl --fail --silent --show-error --max-time 20 \
+                 "https://spinesight.health/?cachebust=$GITHUB_RUN_ID" \
+                 | grep -q "$bundle"; then
+              echo "Live site is serving $bundle."
+              exit 0
+            fi
+            echo "  attempt $attempt: not visible yet, waiting..."
+            sleep 10
+          done
+
+          echo "::warning::The live site did not report $bundle within 50s. The upload itself succeeded, so this is most likely caching or propagation — check https://spinesight.health/ directly."
