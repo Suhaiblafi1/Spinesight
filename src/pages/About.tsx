@@ -75,7 +75,7 @@ export default function About() {
             <span className="eyebrow-light">Leadership</span>
             <h2 className="mt-5 text-3xl font-bold text-brand-navy sm:text-4xl">Founding team</h2>
           </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
+          <div className="mt-12 grid gap-6 md:grid-cols-2">
             {TEAM.map((t) => (
               <div key={t.name} className="card-soft reveal">
                 <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-blue to-brand-green font-display text-xl font-bold text-white">
