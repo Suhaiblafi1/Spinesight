@@ -43,9 +43,10 @@ jobs:
       - name: Upload to the web root over FTPS
         env:
           # cPanel advertises ftp.<domain>, but that subdomain has no DNS
-          # record, and the apex resolves to a shared server whose FTPS
-          # certificate is issued for the server itself. The server's own
-          # name is derived from reverse DNS at run time and tried too.
+          # record and the apex is on shared hosting, whose FTPS certificate
+          # is issued for the provider's own infrastructure. Both are tried
+          # first anyway, so a properly matching name takes over if one is
+          # ever configured.
           FTP_HOSTS: "ftp.spinesight.health spinesight.health"
           FTP_USER: Suhaib@spinesight.health
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
@@ -57,77 +58,93 @@ jobs:
             exit 1
           fi
 
-          # Shared hosting presents a certificate for the hosting server
-          # rather than the customer domain, so the usable FTPS host is not
-          # knowable up front. Add the server's own name, via reverse DNS.
-          candidates="$FTP_HOSTS"
-          for name in $FTP_HOSTS; do
-            ip=$(getent hosts "$name" | awk '{print $1; exit}') || true
-            [ -n "${ip:-}" ] || continue
-            server_name=$(getent hosts "$ip" | awk '{print $2; exit}') || true
-            [ -n "${server_name:-}" ] || continue
-            case " $candidates " in
-              *" $server_name "*) ;;
-              *) candidates="$candidates $server_name" ;;
-            esac
-          done
+          # Arguments shared by every FTP call below.
+          common=(--fail --silent --show-error --ssl-reqd
+                  --connect-timeout 20 --retry 3 --retry-delay 5
+                  --user "$FTP_USER:$FTP_PASSWORD")
 
-          # Take the first host that completes a *verified* FTPS connection.
-          # Merely reaching the server is not enough: sending credentials over
-          # a connection whose identity was never checked is not a trade worth
-          # making for convenience.
-          FTP_SERVER=""
-          echo "Trying FTPS hosts:"
-          for candidate in $candidates; do
+          host=""      # name used in URLs, and the name the certificate must match
+          resolve=()   # pins that name to an address where DNS would not
+
+          # 1. Prefer a configured name that verifies on its own.
+          echo "Trying configured hosts:"
+          for candidate in $FTP_HOSTS; do
             if ! getent hosts "$candidate" >/dev/null 2>&1; then
               echo "  $candidate -- no DNS record"
               continue
             fi
-            if err=$(curl --fail --silent --show-error --ssl-reqd \
-                       --connect-timeout 20 \
-                       --user "$FTP_USER:$FTP_PASSWORD" \
-                       --list-only "ftp://$candidate/" 2>&1 >/dev/null); then
-              FTP_SERVER="$candidate"
+            if err=$(curl "${common[@]}" --list-only "ftp://$candidate/" 2>&1 >/dev/null); then
+              host="$candidate"
               echo "  $candidate -- verified"
               break
             fi
             echo "  $candidate -- ${err%%$'\n'*}"
           done
 
-          if [ -z "$FTP_SERVER" ]; then
-            # Report the certificate the server actually presents, so the
-            # correct hostname is read off the log rather than guessed at.
-            # openssl completes the handshake and stops; no credentials are
-            # sent on an unverified connection.
-            echo "Certificate presented by the server:"
-            for candidate in $candidates; do
-              getent hosts "$candidate" >/dev/null 2>&1 || continue
-              timeout 20 openssl s_client -starttls ftp -connect "$candidate:21" \
-                -servername "$candidate" </dev/null 2>/dev/null \
-                | openssl x509 -noout -subject -ext subjectAltName 2>/dev/null \
-                | sed 's/^/  /' || true
-              break
+          # 2. Otherwise ask the server which name its certificate is for and
+          #    verify against that, pinned to this account's address.
+          #
+          #    Shared hosting answers for the provider's infrastructure name,
+          #    never the customer domain, so no name under spinesight.health
+          #    can ever match. The alternative is --insecure, which encrypts
+          #    but authenticates nothing: credentials that can rewrite the
+          #    live site would go to whoever answered. Verifying against the
+          #    provider's real CA-issued identity keeps that guarantee.
+          if [ -z "$host" ]; then
+            ip=""
+            for candidate in $FTP_HOSTS; do
+              ip=$(getent hosts "$candidate" | awk '{print $1; exit}') || true
+              [ -n "${ip:-}" ] && break
             done
-            echo "::error::No candidate host completed a verified FTPS connection. The certificate above names the host this server answers to; add that name to FTP_HOSTS."
-            exit 1
+            if [ -z "${ip:-}" ]; then
+              echo "::error::None of these hosts resolve: $FTP_HOSTS"
+              exit 1
+            fi
+
+            san=$(timeout 20 openssl s_client -starttls ftp -connect "$ip:21" \
+                  </dev/null 2>/dev/null \
+                  | openssl x509 -noout -ext subjectAltName 2>/dev/null) || true
+            echo "Certificate names offered by $ip:"
+            printf '%s\n' "$san" | sed 's/^/  /'
+
+            # An exact name is best. A wildcard is usable with any one label,
+            # since the server presents the same certificate either way.
+            host=$(grep -o 'DNS:[^,]*' <<<"$san" \
+                   | sed 's/^DNS: *//; s/[[:space:]]*$//' \
+                   | grep -v '^\*' | head -1) || true
+            if [ -z "${host:-}" ]; then
+              wildcard=$(grep -o 'DNS:\*\.[^,]*' <<<"$san" \
+                         | sed 's/^DNS:\*\.//; s/[[:space:]]*$//' | head -1) || true
+              [ -n "${wildcard:-}" ] && host="ftp.$wildcard"
+            fi
+            if [ -z "${host:-}" ]; then
+              echo "::error::The server at $ip offered no usable certificate name."
+              exit 1
+            fi
+
+            resolve=(--resolve "$host:21:$ip")
+            echo "Verifying as $host, pinned to $ip"
+
+            if ! err=$(curl "${common[@]}" "${resolve[@]}" --list-only "ftp://$host/" 2>&1 >/dev/null); then
+              echo "::error::Could not open a verified FTPS session as $host: ${err%%$'\n'*}"
+              exit 1
+            fi
           fi
-          echo "FTP host: $FTP_SERVER"
+          echo "FTP host: $host"
 
           # Show where this account actually lands. If anything about the
           # target is wrong, this listing is what explains it.
-          root_listing=$(curl --fail --silent --show-error --ssl-reqd \
-            --connect-timeout 30 --retry 3 --retry-delay 5 \
-            --user "$FTP_USER:$FTP_PASSWORD" --list-only "ftp://$FTP_SERVER/")
+          root_listing=$(curl "${common[@]}" "${resolve[@]}" --list-only "ftp://$host/")
           echo "FTP account root contains:"
           printf '%s\n' "$root_listing" | sed 's/^/  /'
 
           # Some accounts land in the hosting root (which holds public_html),
           # others are scoped to a web root directly.
           if grep -qx 'public_html' <<<"$root_listing"; then
-            base="ftp://$FTP_SERVER/public_html"
+            base="ftp://$host/public_html"
             echo "Target: public_html (account sits above the web root)"
           else
-            base="ftp://$FTP_SERVER"
+            base="ftp://$host"
             echo "Target: the account's own root"
           fi
 
@@ -136,9 +153,7 @@ jobs:
           # default, and deploying into that subfolder would create a junk
           # directory while leaving the real site untouched -- a silent
           # non-deploy, which is worse than a failed one.
-          target_listing=$(curl --fail --silent --show-error --ssl-reqd \
-            --connect-timeout 30 --retry 3 --retry-delay 5 \
-            --user "$FTP_USER:$FTP_PASSWORD" --list-only "$base/")
+          target_listing=$(curl "${common[@]}" "${resolve[@]}" --list-only "$base/")
           if ! grep -qxE 'index\.html|assets' <<<"$target_listing"; then
             echo "::error::The deploy target does not look like the site root -- no index.html or assets/ found. The FTP account is most likely scoped to the wrong directory; it should point at public_html. See the listing above for what it can actually see."
             exit 1
@@ -146,17 +161,14 @@ jobs:
 
           mapfile -t files < <(find dist -type f | sort)
           if [ "${#files[@]}" -eq 0 ]; then
-            echo "::error::dist/ is empty — the build produced nothing to deploy."
+            echo "::error::dist/ is empty -- the build produced nothing to deploy."
             exit 1
           fi
 
           for file in "${files[@]}"; do
             rel="${file#dist/}"
-            curl --fail --silent --show-error --ssl-reqd --ftp-create-dirs \
-              --connect-timeout 30 --retry 3 --retry-delay 5 \
-              --user "$FTP_USER:$FTP_PASSWORD" \
-              --upload-file "$file" \
-              "$base/$rel"
+            curl "${common[@]}" "${resolve[@]}" --ftp-create-dirs \
+              --upload-file "$file" "$base/$rel"
             echo "  uploaded $rel"
           done
 
