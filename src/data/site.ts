@@ -211,11 +211,6 @@ export const TEAM = [
     role: 'Founder & CEO · Clinical AI Lead',
     bio: 'Researcher at Jordan University Hospital specializing in health informatics, with 5+ years of experience and two medical-AI innovations under patent registration.',
   },
-  {
-    name: 'Dr. Suhaib Al-Khawaldeh',
-    role: 'Co-Founder · Growth & Business Development',
-    bio: 'PhD in Digital Economy from Aston University, UK. Leads market entry, hospital relationships, and regional expansion across Saudi Arabia and the Gulf.',
-  },
 ]
 
 export const CLINICAL_ADVISORS = [
