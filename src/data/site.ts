@@ -4,7 +4,6 @@ export const SITE_URL = 'https://spinesight.health'
 export const CONTACT_EMAIL = 'hello@spinesight.health'
 export const WHATSAPP_NUMBER = '00962799724298'
 export const WHATSAPP_URL = 'https://wa.me/962799724298'
-export const ADDRESS = '67 Abd Al-Rahim Al-Haj Mohammad St., Amman, Jordan'
 
 export const NAV_LINKS = [
   { to: '/', label: 'Home' },
