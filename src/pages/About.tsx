@@ -26,11 +26,11 @@ export default function About() {
   useReveal()
   return (
     <>
-      <SEO title="About Us" description="Meet the SpineSight team: clinical research, medical AI, and healthcare business development, guided by specialist clinical advisors in Amman, Jordan." path="/about" />
+      <SEO title="About Us" description="Meet the SpineSight team: clinical research and medical AI, guided by specialist clinical advisors in Amman, Jordan." path="/about" />
       <PageHero
         eyebrow="About Us"
-        title="A team that combines clinical research with commercial execution"
-        subtitle="Our strength comes from understanding hospital workflows, deep medical-imaging expertise, and the ability to open markets and build partnerships."
+        title="Clinical research and medical AI, grounded in hospital practice"
+        subtitle="Our strength comes from understanding hospital workflows, deep medical-imaging expertise, and the practising spine specialists who guide our clinical direction."
       />
 
       {/* MISSION / VISION */}
@@ -73,9 +73,9 @@ export default function About() {
         <div className="container-site">
           <div className="reveal max-w-2xl">
             <span className="eyebrow-light">Leadership</span>
-            <h2 className="mt-5 text-3xl font-bold text-brand-navy sm:text-4xl">Founding team</h2>
+            <h2 className="mt-5 text-3xl font-bold text-brand-navy sm:text-4xl">Founder</h2>
           </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-2">
+          <div className="mt-12 grid gap-6 md:max-w-xl">
             {TEAM.map((t) => (
               <div key={t.name} className="card-soft reveal">
                 <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-blue to-brand-green font-display text-xl font-bold text-white">
