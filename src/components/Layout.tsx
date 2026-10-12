@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router'
 import { useEffect } from 'react'
-import { Menu, X, ArrowRight, LogIn, Mail, MapPin, MessageCircle } from 'lucide-react'
-import { NAV_LINKS, CONTACT_EMAIL, PLATFORM_LOGIN_URL, SITE_URL, WHATSAPP_URL, ADDRESS } from '@/data/site'
+import { Menu, X, ArrowRight, LogIn, Mail, MessageCircle } from 'lucide-react'
+import { NAV_LINKS, CONTACT_EMAIL, PLATFORM_LOGIN_URL, SITE_URL, WHATSAPP_URL } from '@/data/site'
 import JsonLd from './JsonLd'
 import NewsletterSection from './Newsletter'
 
@@ -114,9 +114,6 @@ function Footer() {
             <p className="flex items-center gap-2">
               <Mail className="h-4 w-4 text-brand-green" />
               <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-white">{CONTACT_EMAIL}</a>
-            </p>
-            <p className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-brand-green" /> {ADDRESS}
             </p>
             <div className="flex items-center gap-3 pt-2">
               <a

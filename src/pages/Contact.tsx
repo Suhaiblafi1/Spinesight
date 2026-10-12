@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Mail, MapPin, Send, CheckCircle2, MessageCircle } from 'lucide-react'
+import { Mail, Send, CheckCircle2, MessageCircle } from 'lucide-react'
 import { PageHero } from '@/components/Sections'
-import { CONTACT_EMAIL, WHATSAPP_URL, ADDRESS } from '@/data/site'
+import { CONTACT_EMAIL, WHATSAPP_URL } from '@/data/site'
 import { useReveal } from '@/hooks/useReveal'
 import SEO from '@/components/SEO'
 
@@ -66,15 +66,6 @@ export default function Contact() {
                   <a href={`mailto:${CONTACT_EMAIL}`} className="font-medium text-brand-navy hover:text-brand-blue">
                     {CONTACT_EMAIL}
                   </a>
-                </div>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-mist text-brand-blue">
-                  <MapPin className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-widest text-slate-400">Address</p>
-                  <p className="font-medium text-brand-navy">{ADDRESS}</p>
                 </div>
               </div>
             </div>
